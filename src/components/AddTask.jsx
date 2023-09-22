@@ -5,7 +5,7 @@ export default function AddTask({text,HandelText,addTask}){
                 <input value={text} onChange={(e)=>HandelText(e)} type="text" id="form2" className="form-control" />
                 <label className="form-label" htmlFor="form2">New task...</label>
               </div>
-              <button onClick={(e)=>addTask(e)} type="submit"  style={{marginBottom:'30px'}} className="btn btn-info ms-2">Add</button>
+              <button onClick={(e)=>addTask(e)} type="submit"  style={{marginBottom:'30px'}} className="btn btn-info ms-2 text-white">Add</button>
             </form>
     </>
 }

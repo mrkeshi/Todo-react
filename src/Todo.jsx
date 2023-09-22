@@ -1,22 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddTask from "./components/AddTask";
 import Tabs from "./components/Tabs";
 import TabContents from "./components/TabContents";
 
 export default function Todo(){
-    const [todos,setTodos]=useState([{
-        id:1,
-        title:'search',
-        completed:false
-    }])
+
+  useEffect(()=>{
+    const olddata=localStorage.getItem('todos')
+    if(olddata != ''){
+   
+      setTodos(JSON.parse(olddata))
+    }
+  },[])
+    const [todos,setTodos]=useState([{}])
     const [status,setStatus]=useState('ALL')
     const [text,setText]=useState('')
     function addTask(e){
         e.preventDefault()
-        setTodos((state)=>{
-            return[{title:text,type:false,id:state.length+1},...state]
+        if(text.trim() !=' ' && text.trim() !=''){
+          
+          setTodos((state)=>{
+           
+            return[{title:text,type:false,id:Date.now()},...state]
+            
         })
-        setText('')
+
+        }
+       
+        setText(' ')
     }
     function HandelText(e){
     setText(e.target.value)
@@ -34,6 +45,22 @@ export default function Todo(){
         })
       })
     }
+    function deleteTodo(e,id){
+      e.stopPropagation()
+      setTodos((prevTodos) => {
+        return prevTodos.filter((todo) => todo.id !== id);
+      });
+   
+    }
+    function changeStatus(status){
+      setStatus(status)
+    }
+    useEffect(()=>{
+      if(todos.length>0){
+        localStorage.setItem("todos",JSON.stringify(todos));
+  
+      }
+    },[todos])
     return<>
 <section className="vh-100 gradient-custom">
   <div className="container py-5 h-100">
@@ -44,10 +71,10 @@ export default function Todo(){
           <div className="card-body p-5">
 
          <AddTask text={text} HandelText={HandelText} addTask={addTask}/>
-         <Tabs/>
+         <Tabs changeStatus={changeStatus} status={status}/>
 
 
-       <TabContents status={status} data={todos} toggleTodo={toggleTodo}/>
+       <TabContents status={status} data={todos} toggleTodo={toggleTodo} deleteTodo={deleteTodo}/>
     
 
           </div>
